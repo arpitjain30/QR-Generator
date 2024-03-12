@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-family: calibri;
+        }
+
+        body {
+            height: 100%;
+            width: 100%;
+            color: #f2f2f2;
+            background-color: rgb(36, 34, 34);
+        }
+
+        .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid #f2f2f2;
+            padding: 30px;
+            height: auto;
+            width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: transparent;
+        }
+
+        #input-data {
+            margin: 10px;
+            height: 35px;
+            border: none;
+            outline: none;
+            font-size: large;
+            width: 90%;
+            padding-left: 5px;
+        }
+
+        #download {
+            display: none;
+        }
+
+        .submit-button {
+            margin: 10px;
+            height: 30px;
+            width: 80%;
+            border: none;
+            outline: none;
+            font-size: large;
+            background-color: #007bff;
+            color: #f2f2f2;
+        }
+
+        .submit-button:hover {
+            background-color: #0056b3;
+        }
+
+        .download-button {
+            margin: 10px;
+            height: 30px;
+            width: 100%;
+            border: none;
+            outline: none;
+            font-size: large;
+            background-color: #007bff;
+            color: #f2f2f2;
+        }
+
+        .download-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <div class="container">
+            <h1>Generate the QR code</h1>
+            <input type="text" name="" id="input-data" placeholder="Enter name or URL" />
+            <div class="image-box"></div>
+            <p class="msg"></p>
+            <button type="button" class="submit-button" id="submit-button">
+                Submit
+            </button>
+            <a href="" id="download"><button type="button" class="download-button">
+                    📩 Download
+                </button></a>
+        </div>
+    </div>
+</body>
+<script>
+    let sButton = document.querySelector("#submit-button");
+    let data = document.querySelector("#input-data");
+    let qrBox = document.querySelector(".image-box");
+    let msg = document.querySelector('.msg');
+    let downloadButton = document.querySelector('#download');
+    let url;
+
+    function generateQR() {
+        qrBox.innerHTML = '';
+        msg.innerHTML = ''
+        if (sButton.innerHTML === 'Re-Generate') {
+            data.value = '';
+            downloadButton.style.display = "none"
+            sButton.innerHTML = 'Submit';
+        } else {
+            url = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + encodeURIComponent(data.value);
+            let image = document.createElement('img');
+            image.src = url;
+            qrBox.appendChild(image);
+            sButton.innerHTML = 'Re-Generate';
+            msg.innerHTML = `QR for ${data.value} generated`
+            downloadButton.style.display = "block"
+            return url
+        }
+    }
+    sButton.addEventListener('click', generateQR);
+    downloadButton.addEventListener('click', () => {
+        downloadButton.href = url;
+        downloadButton.download = 'qr_code.png'
+    })
+</script>
+
+</html>
